@@ -44,7 +44,7 @@
     </div>
 
     <!-- ========== Pantalla inicial ========== -->
-    <section id="splash" class="section active text-center max-w-lg w-full">
+    <section id="splash" class="section text-center max-w-lg w-full">
 
       <!-- Logo -->
       <div class="float-anim mb-6">
@@ -136,6 +136,82 @@
         <div class="flex justify-between">
           <button class="arcade-btn arcade-btn-pink" onclick="goTo(1)">◄ ATRÁS</button>
           <button class="arcade-btn" onclick="goTo(3)">CONTINUAR ►</button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========== Exclusiones ========== -->
+    <section id="step3" class="section active max-w-md w-full">
+      <div class="arcade-panel p-6">
+
+        <p class="pixel-font glow-cyan mb-1" style="font-size: 0.5rem">PASO 3 DE 6</p>
+        <h2 class="pixel-font glow-pink mb-2" style="font-size: 0.75rem">ZONAS PROHIBIDAS</h2>
+        <p class="mb-4" style="font-size: 0.7rem; color: rgba(0,255,245,0.5)">
+          ¿ALGUIEN NO PUEDE REGALAR A ALGUIEN?
+        </p>
+
+        <!-- Botones sí/no exclusiones -->
+        <div class="flex gap-3 mb-5">
+          <button id="btnNoExcl" 
+                  class="arcade-btn flex-1" 
+                  onclick="setExclusion(false)" 
+                  style="font-size: 0.45rem">
+            ✗ SIN EXCLUSIONES
+          </button>
+          <button id="btnSiExcl" 
+                  class="arcade-btn arcade-btn-pink flex-1" 
+                  onclick="setExclusion(true)" 
+                  style="font-size: 0.45rem">
+            ✓ ESTABLECER
+          </button>
+        </div>
+
+        <!-- Lista de exclusiones — el JS la llena dinámicamente -->
+        <div id="exclusionList" class="space-y-2 mb-6 hidden"></div>
+
+        <!-- Navegación -->
+        <div class="flex justify-between">
+          <button class="arcade-btn arcade-btn-pink" onclick="goTo(2)">◄ ATRÁS</button>
+          <button class="arcade-btn" onclick="goTo(4)">CONTINUAR ►</button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========== PASO 4 — Tipo de evento ========== -->
+    <section id="step4" class="section max-w-md w-full">
+      <div class="arcade-panel p-6">
+
+        <p class="pixel-font glow-cyan mb-1" style="font-size: 0.5rem">PASO 4 DE 6</p>
+        <h2 class="pixel-font glow-pink mb-4" style="font-size: 0.75rem">SELECCIONA EVENTO</h2>
+
+        <!-- Opciones de evento — grid de 2 columnas -->
+        <div class="grid grid-cols-2 gap-2 mb-4" id="eventTypes">
+          <button class="event-opt" onclick="selectEvent(this, 'Navidad')">NAVIDAD</button>
+          <button class="event-opt" onclick="selectEvent(this, 'Intercambio')">INTERCAMBIO</button>
+          <button class="event-opt" onclick="selectEvent(this, 'San Valentín')">SAN VALENTÍN</button>
+          <button class="event-opt" onclick="selectEvent(this, 'Día de la Madre')">DÍA DE LA MADRE</button>
+          <button class="event-opt" onclick="selectEvent(this, 'Día del Niño')">DÍA DEL NIÑO</button>
+          <button class="event-opt" onclick="selectEvent(this, 'Otro')">OTRO...</button>
+        </div>
+
+        <!-- Campo nombre personalizado — oculto por defecto -->
+        <div id="customEventDiv" class="hidden mb-4">
+          <label class="block mb-1" 
+                 style="font-size: 0.7rem; color: rgba(0,255,245,0.6)">
+            ▶ NOMBRE DE LA CELEBRACIÓN
+          </label>
+          <input id="inputEventName" 
+                 type="text" 
+                 class="arcade-input" 
+                 placeholder="NOMBRE DEL EVENTO...">
+        </div>
+
+        <!-- Navegación -->
+        <div class="flex justify-between">
+          <button class="arcade-btn arcade-btn-pink" onclick="goTo(3)">◄ ATRÁS</button>
+          <button class="arcade-btn" onclick="goTo(5)">CONTINUAR ►</button>
         </div>
 
       </div>
