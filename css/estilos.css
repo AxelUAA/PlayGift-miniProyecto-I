@@ -1,0 +1,383 @@
+/* PLAY GIFT — Estilos principales */
+
+/* Variables globales — cambiar un color aquí lo actualiza en todo el sitio */
+:root {
+  --neon-cyan: #00fff5;
+  --neon-pink: #ff00c8;
+  --neon-yellow: #ffe600;
+  --neon-green: #39ff14;
+  --dark: #050510;
+  --darker: #020208;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  background: var(--dark);
+  font-family: 'Share Tech Mono', monospace;
+  color: #fff;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Scanlines — líneas horizontales tipo TV vieja (pseudo-elemento decorativo) */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg, transparent, transparent 2px,
+    rgba(0,0,0,0.15) 2px, rgba(0,0,0,0.15) 4px
+  );
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* Grid de fondo — cuadrícula sutil tipo Tron */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0,255,245,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,255,245,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* --- TIPOGRAFÍA --- */
+.pixel-font { font-family: 'Press Start 2P', monospace; }
+
+/* --- EFECTOS NEÓN (text-shadow apilado = glow realista) --- */
+.glow-cyan {
+  color: var(--neon-cyan);
+  text-shadow: 0 0 7px var(--neon-cyan), 0 0 21px var(--neon-cyan), 0 0 42px var(--neon-cyan);
+}
+.glow-pink {
+  color: var(--neon-pink);
+  text-shadow: 0 0 7px var(--neon-pink), 0 0 21px var(--neon-pink), 0 0 42px var(--neon-pink);
+}
+.glow-yellow {
+  color: var(--neon-yellow);
+  text-shadow: 0 0 7px var(--neon-yellow), 0 0 21px var(--neon-yellow);
+}
+.glow-green {
+  color: var(--neon-green);
+  text-shadow: 0 0 7px var(--neon-green), 0 0 21px var(--neon-green);
+}
+
+/* --- BOTONES ARCADE --- */
+/* clip-path: polygon() = esquinas cortadas en diagonal, look futurista */
+.arcade-btn {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.6rem;
+  padding: 12px 24px;
+  background: transparent;
+  border: 3px solid var(--neon-cyan);
+  color: var(--neon-cyan);
+  cursor: pointer;
+  position: relative;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  transition: all 0.1s;
+  clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+  box-shadow: 0 0 15px var(--neon-cyan), inset 0 0 15px rgba(0,255,245,0.1);
+}
+.arcade-btn:hover {
+  background: rgba(0,255,245,0.15);
+  box-shadow: 0 0 30px var(--neon-cyan), inset 0 0 20px rgba(0,255,245,0.2);
+  transform: scale(1.03);
+}
+.arcade-btn:active { transform: scale(0.97); }
+
+.arcade-btn-pink {
+  border-color: var(--neon-pink);
+  color: var(--neon-pink);
+  box-shadow: 0 0 15px var(--neon-pink), inset 0 0 15px rgba(255,0,200,0.1);
+}
+.arcade-btn-pink:hover {
+  background: rgba(255,0,200,0.15);
+  box-shadow: 0 0 30px var(--neon-pink), inset 0 0 20px rgba(255,0,200,0.2);
+}
+
+.arcade-btn-yellow {
+  border-color: var(--neon-yellow);
+  color: var(--neon-yellow);
+  box-shadow: 0 0 15px var(--neon-yellow), inset 0 0 15px rgba(255,230,0,0.1);
+}
+.arcade-btn-yellow:hover {
+  background: rgba(255,230,0,0.15);
+  box-shadow: 0 0 30px var(--neon-yellow);
+}
+
+/* --- INPUTS --- */
+.arcade-input {
+  background: rgba(0,255,245,0.03);
+  border: 2px solid rgba(0,255,245,0.4);
+  color: var(--neon-cyan);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 1rem;
+  padding: 10px 16px;
+  outline: none;
+  width: 100%;
+  transition: all 0.2s;
+  clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+}
+.arcade-input:focus {
+  border-color: var(--neon-cyan);
+  box-shadow: 0 0 15px rgba(0,255,245,0.3), inset 0 0 10px rgba(0,255,245,0.05);
+  background: rgba(0,255,245,0.07);
+}
+.arcade-input::placeholder { color: rgba(0,255,245,0.3); }
+
+/* --- CHECKBOX (appearance:none = diseño custom desde cero) --- */
+.arcade-check {
+  appearance: none;
+  width: 18px; height: 18px;
+  border: 2px solid rgba(0,255,245,0.5);
+  background: transparent;
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+}
+.arcade-check:checked {
+  background: rgba(0,255,245,0.2);
+  border-color: var(--neon-cyan);
+  box-shadow: 0 0 8px var(--neon-cyan);
+}
+.arcade-check:checked::after {
+  content: '✓';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  color: var(--neon-cyan);
+  font-size: 12px;
+}
+
+/* --- PANEL / TARJETA (::before = línea decorativa superior con gradient) --- */
+.arcade-panel {
+  background: rgba(5,5,20,0.9);
+  border: 2px solid rgba(0,255,245,0.2);
+  position: relative;
+}
+.arcade-panel::before {
+  content: '';
+  position: absolute;
+  top: -1px; left: 20px; right: 20px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
+}
+
+/* --- PARTICIPANTES — DRAG & DROP ---
+   .dragging = arrastrando | .drag-over = zona de destino */
+.player-tag {
+  background: rgba(255,0,200,0.08);
+  border: 1px solid rgba(255,0,200,0.5);
+  color: var(--neon-pink);
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.5rem;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: grab;
+  transition: all 0.2s;
+  clip-path: polygon(5px 0%, 100% 0%, calc(100% - 5px) 100%, 0% 100%);
+}
+.player-tag:hover {
+  background: rgba(255,0,200,0.2);
+  box-shadow: 0 0 15px rgba(255,0,200,0.4);
+  transform: translateX(4px);
+}
+.player-tag.dragging {
+  opacity: 0.5;
+  transform: rotate(2deg) scale(1.05);
+  box-shadow: 0 0 25px var(--neon-pink);
+}
+.player-tag.drag-over {
+  border-color: var(--neon-cyan);
+  background: rgba(0,255,245,0.1);
+}
+
+/* --- STEP INDICATOR (active = paso actual, done = completado) --- */
+.step-dot {
+  width: 10px; height: 10px;
+  border: 2px solid rgba(0,255,245,0.3);
+  transition: all 0.3s;
+}
+.step-dot.active {
+  background: var(--neon-cyan);
+  box-shadow: 0 0 10px var(--neon-cyan);
+  border-color: var(--neon-cyan);
+}
+.step-dot.done {
+  background: rgba(0,255,245,0.3);
+  border-color: rgba(0,255,245,0.5);
+}
+
+/* --- SLOT MACHINE --- */
+.slot-reel {
+  background: var(--darker);
+  border: 2px solid rgba(255,230,0,0.4);
+  overflow: hidden;
+  height: 70px;
+  position: relative;
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.8), 0 0 15px rgba(255,230,0,0.2);
+}
+.slot-reel::before, .slot-reel::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0;
+  height: 20px;
+  z-index: 2;
+}
+.slot-reel::before { top: 0; background: linear-gradient(to bottom, var(--darker), transparent); }
+.slot-reel::after  { bottom: 0; background: linear-gradient(to top, var(--darker), transparent); }
+
+.slot-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+/* --- BOTONES DE SELECCIÓN --- */
+.budget-opt {
+  background: rgba(57,255,20,0.05);
+  border: 2px solid rgba(57,255,20,0.3);
+  color: var(--neon-green);
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.55rem;
+  padding: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+}
+.budget-opt:hover, .budget-opt.selected {
+  background: rgba(57,255,20,0.2);
+  border-color: var(--neon-green);
+  box-shadow: 0 0 15px rgba(57,255,20,0.4);
+}
+
+.event-opt {
+  background: rgba(0,255,245,0.04);
+  border: 2px solid rgba(0,255,245,0.2);
+  color: rgba(0,255,245,0.7);
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.45rem;
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+}
+.event-opt:hover, .event-opt.selected {
+  background: rgba(0,255,245,0.15);
+  border-color: var(--neon-cyan);
+  color: var(--neon-cyan);
+  box-shadow: 0 0 12px rgba(0,255,245,0.3);
+}
+
+/* --- RESULTADO SORTEO --- */
+.result-card {
+  background: rgba(255,0,200,0.05);
+  border: 1px solid rgba(255,0,200,0.3);
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+  transition: all 0.3s;
+}
+.result-card:hover {
+  background: rgba(255,0,200,0.12);
+  box-shadow: 0 0 20px rgba(255,0,200,0.2);
+}
+
+/* --- TICKER / MARQUEE --- */
+.ticker {
+  background: rgba(255,230,0,0.08);
+  border-top: 1px solid rgba(255,230,0,0.3);
+  border-bottom: 1px solid rgba(255,230,0,0.3);
+  overflow: hidden;
+  white-space: nowrap;
+  padding: 6px 0;
+}
+.ticker-text {
+  display: inline-block;
+  animation: marquee 18s linear infinite;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.45rem;
+  color: var(--neon-yellow);
+  letter-spacing: 3px;
+}
+
+/* --- WIZARD (section oculta por default, .active la muestra) --- */
+.section { display: none; }
+.section.active { display: block; }
+
+/* --- ANIMACIONES --- */
+@keyframes marquee {
+  0%   { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-8px); }
+}
+@keyframes flickerIn {
+  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
+  20%, 22%, 24%, 55% { opacity: 0.4; }
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+@keyframes glitchX {
+  0%   { clip-path: inset(40% 0 61% 0); transform: translate(-2px, 0); }
+  20%  { clip-path: inset(92% 0 1%  0); transform: translate(2px, 0);  }
+  40%  { clip-path: inset(43% 0 1%  0); transform: translate(-2px, 0); }
+  60%  { clip-path: inset(25% 0 58% 0); transform: translate(2px, 0);  }
+  80%  { clip-path: inset(54% 0 7%  0); transform: translate(-2px, 0); }
+  100% { clip-path: inset(58% 0 43% 0); transform: translate(0); }
+}
+
+.flicker    { animation: flickerIn 3s infinite; }
+.blink      { animation: blink 1s step-end infinite; }
+.float-anim { animation: float 3s ease-in-out infinite; }
+
+/* Glitch logo — usa data-text="TEXTO" en HTML para las copias */
+.logo-glitch { position: relative; }
+.logo-glitch::before,
+.logo-glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+}
+.logo-glitch::before {
+  color: var(--neon-pink);
+  animation: glitchX 3s infinite linear alternate-reverse;
+}
+.logo-glitch::after {
+  color: var(--neon-cyan);
+  animation: glitchX 2s infinite linear alternate-reverse;
+  animation-delay: 0.3s;
+}
+
+/* --- SCROLLBAR --- */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--darker); }
+::-webkit-scrollbar-thumb { background: rgba(0,255,245,0.3); }
+
+/* --- RESPONSIVE (sm: 640px | lg: 1024px) --- */
+@media (max-width: 640px) {
+  .pixel-font { font-size: 0.5rem !important; }
+  .arcade-btn { font-size: 0.45rem; padding: 10px 16px; }
+  .arcade-panel { padding: 1rem !important; }
+}
+
+@media (min-width: 1024px) {
+  .arcade-panel { max-width: 600px; margin: 0 auto; }
+}
