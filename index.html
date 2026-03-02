@@ -142,7 +142,7 @@
     </section>
 
     <!-- ========== Exclusiones ========== -->
-    <section id="step3" class="section active max-w-md w-full">
+    <section id="step3" class="section max-w-md w-full">
       <div class="arcade-panel p-6">
 
         <p class="pixel-font glow-cyan mb-1" style="font-size: 0.5rem">PASO 3 DE 6</p>
@@ -179,7 +179,7 @@
       </div>
     </section>
 
-    <!-- ========== PASO 4 — Tipo de evento ========== -->
+    <!-- ========== Tipo de evento ========== -->
     <section id="step4" class="section max-w-md w-full">
       <div class="arcade-panel p-6">
 
@@ -217,6 +217,149 @@
       </div>
     </section>
 
+    <!-- ========== Fecha y Presupuesto ========== -->
+    <section id="step5" class="section max-w-md w-full">
+      <div class="arcade-panel p-6">
+
+        <p class="pixel-font glow-cyan mb-1" style="font-size: 0.5rem">PASO 5 DE 6</p>
+        <h2 class="pixel-font glow-pink mb-4" style="font-size: 0.75rem">FECHA Y MONEDAS</h2>
+
+        <!-- Fecha -->
+        <label class="block mb-2" 
+               style="font-size: 0.7rem; color: rgba(0,255,245,0.6)">
+          ▶ FECHA DEL EVENTO
+        </label>
+
+        <!-- Fechas sugeridas — el JS las genera dinámicamente -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-3" id="fechasSugeridas"></div>
+
+        <input id="inputFecha" 
+               type="date" 
+               class="arcade-input mb-5" 
+               style="color-scheme: dark;">
+
+        <!-- Presupuesto -->
+        <label class="block mb-2" 
+               style="font-size: 0.7rem; color: rgba(57,255,20,0.7)">
+          ▶ PRESUPUESTO POR JUGADOR
+        </label>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-3">
+          <button class="budget-opt" onclick="selectBudget(this, 100)">$100</button>
+          <button class="budget-opt" onclick="selectBudget(this, 150)">$150</button>
+          <button class="budget-opt" onclick="selectBudget(this, 200)">$200</button>
+          <button class="budget-opt" onclick="selectBudget(this, 300)">$300</button>
+          <button class="budget-opt" onclick="selectBudget(this, 500)">$500</button>
+          <button class="budget-opt" onclick="selectBudget(this, 'custom')">OTRO ✏</button>
+        </div>
+
+        <!-- Input cantidad personalizada — oculto por defecto -->
+        <input id="inputPresupuesto" 
+               type="number" 
+               class="arcade-input mb-5 hidden" 
+               placeholder="INTRODUCE CANTIDAD...">
+
+        <!-- Navegación -->
+        <div class="flex justify-between">
+          <button class="arcade-btn arcade-btn-pink" onclick="goTo(4)">◄ ATRÁS</button>
+          <button class="arcade-btn" onclick="saveAndFinish()">GUARDAR ►</button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========== Dashboard Final ========== -->
+    <section id="step6" class="section active max-w-lg w-full">
+      <div class="arcade-panel p-6 mb-4">
+
+        <h2 class="pixel-font glow-cyan mb-6 text-center" style="font-size: 0.75rem">
+          ◄ GAME LOBBY ►
+        </h2>
+
+        <!-- Botones principales — grid responsive -->
+        <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <button class="arcade-btn arcade-btn-yellow w-full" 
+                  onclick="showEventData()" 
+                  style="font-size: 0.5rem; padding: 16px">
+            VER DATOS<br>
+            <span style="font-size: 0.4rem; opacity: 0.7">DEL EVENTO</span>
+          </button>
+          <button class="arcade-btn w-full" 
+                  onclick="startSlot()" 
+                  style="font-size: 0.5rem; padding: 16px">
+            REALIZAR<br>
+            <span style="font-size: 0.4rem; opacity: 0.7">SORTEO</span>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Panel datos del evento — oculto por defecto -->
+      <div id="eventDataPanel" class="arcade-panel p-6 mb-4 hidden">
+        <p class="pixel-font glow-yellow mb-4" style="font-size: 0.5rem">◄ DATOS DEL EVENTO ►</p>
+        <div id="eventDataContent" class="space-y-2" 
+             style="font-size: 0.75rem; color: rgba(0,255,245,0.8)">
+        </div>
+      </div>
+
+      <!-- Panel slot machine sorteo — oculto por defecto -->
+      <div id="slotPanel" class="arcade-panel p-6 hidden">
+        <p class="pixel-font glow-yellow mb-4 text-center" style="font-size: 0.5rem">
+          ◄ SLOT MACHINE ►
+        </p>
+
+        <!-- Rodillos -->
+        <div class="flex gap-2 justify-center mb-6">
+          <div class="slot-reel flex-1 max-w-28">
+            <div class="slot-content">
+              <p class="pixel-font glow-pink text-center" 
+                 style="font-size: 0.55rem" 
+                 id="reel1text">???</p>
+            </div>
+          </div>
+
+          <div class="flex items-center pixel-font glow-yellow" style="font-size: 1rem">→</div>
+
+          <div class="slot-reel flex-1 max-w-28">
+            <div class="slot-content">
+              <p class="pixel-font glow-cyan text-center" 
+                 style="font-size: 0.55rem" 
+                 id="reel2text">???</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Botón girar -->
+        <button id="btnSpin" 
+                class="arcade-btn arcade-btn-yellow w-full mb-6" 
+                onclick="spinNext()" 
+                style="font-size: 0.55rem; padding: 14px">
+           GIRAR RULETA
+        </button>
+
+        <!-- Resultados del sorteo -->
+        <div id="sorteoResults" class="space-y-2"></div>
+
+        <!-- Botón nuevo juego — oculto hasta terminar sorteo -->
+        <div id="btnNuevoSorteo" class="hidden mt-4">
+          <button class="arcade-btn arcade-btn-pink w-full" 
+                  onclick="resetAll()" 
+                  style="font-size: 0.5rem">
+            ↺ NUEVO JUEGO
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+  </div>
+
+<!-- barra animada texto inferior-->
+  <div class="ticker fixed bottom-0 left-0 right-0 z-20">
+    <span class="ticker-text">
+      © 2026 PLAY GIFT ARCADE ★ ALL RIGHTS RESERVED ★ 
+      FELICES FIESTAS ★ GOOD LUCK PLAYER ★ NO COINS WERE HARMED ★
+    </span>
   </div>
 
 </body>
