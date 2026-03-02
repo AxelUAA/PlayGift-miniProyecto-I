@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Play Gift</title>
+  <link rel="icon" type="image/png" href="assets/image/PlayGiftLogo.png">
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- tipografías arcade -->
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+  <!-- Nuestro CSS -->
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+
+<body class="relative z-10">
+
+  <!--  barra animada de texto superior -->
+  <div class="ticker">
+    <span class="ticker-text">
+      ★ PLAY GIFT ★ INTERCAMBIO DE REGALOS ★ INSERT COIN TO PLAY ★ 
+      SORT YOUR FRIENDS ★ NO CHEATING ALLOWED ★ PRESS START ★ 
+      PLAY GIFT ★ INTERCAMBIO DE REGALOS ★ INSERT COIN TO PLAY ★
+    </span>
+  </div>
+
+  <!-- CONTENEDOR PRINCIPAL -->
+   <!-- Centramos el contenido px-4 y py-8 clases de tailwind -->
+  <div class="relative z-10 min-h-screen flex flex-col items-center justify-center px-4 py-8">
+
+  <!-- Aqui van las secciones-->
+
+  <!-- INDICADOR DE PASOS — bolitas de progreso -->
+    <div id="stepIndicator" class="flex gap-3 mb-8 hidden">
+      <div class="step-dot" id="dot-0"></div>
+      <div class="step-dot" id="dot-1"></div>
+      <div class="step-dot" id="dot-2"></div>
+      <div class="step-dot" id="dot-3"></div>
+      <div class="step-dot" id="dot-4"></div>
+      <div class="step-dot" id="dot-5"></div>
+    </div>
+
+    <!-- ========== Pantalla inicial ========== -->
+    <section id="splash" class="section active text-center max-w-lg w-full">
+
+      <!-- Logo -->
+      <div class="float-anim mb-6">
+        <img src="assets/image/PlayGiftLogo.png" alt="Play Gift Logo" class="w-48 mx-auto">
+      </div>
+
+      <h1 class="pixel-font glow-cyan logo-glitch mb-2" 
+          data-text="PLAY GIFT" 
+          style="font-size: clamp(1.2rem, 5vw, 2rem)">
+        PLAY GIFT
+      </h1>
+      <p class="pixel-font glow-pink mb-1" style="font-size: 0.55rem">INTERCAMBIO DE REGALOS</p>
+      <p class="mb-8" style="font-size: 0.7rem; color: rgba(255,255,255,0.3)">2026 EDITION</p>
+
+      <!-- Panel high scores -->
+      <div class="arcade-panel p-6 mb-8">
+        <p class="pixel-font glow-yellow mb-4" style="font-size: 0.5rem">◄ REGALOS PARA TODOS ►</p>
+        <div class="space-y-2 text-left" style="font-size: 0.75rem; color: rgba(0,255,245,0.6)">
+          <div class="flex justify-between"><span>NAVIDAD 2026</span><span>12 PLAYERS</span></div>
+          <div class="flex justify-between"><span>AMOR Y AMISTAD</span><span>8 PLAYERS</span></div>
+          <div class="flex justify-between"><span>DÍA DE MADRE</span><span>6 PLAYERS</span></div>
+        </div>
+      </div>
+
+      <button class="arcade-btn flicker" onclick="goTo(1)">► COMENCEMOS</button>
+      <p class="blink mt-4" style="font-size: 0.6rem; color: rgba(255,255,255,0.4)">PRESIONA START</p>
+
+    </section>
+
+  </div>
+
+</body>
+</html>
