@@ -44,7 +44,7 @@
     </div>
 
     <!-- ========== Pantalla inicial ========== -->
-    <section id="splash" class="section active text-center max-w-lg w-full">
+    <section id="splash" class="section text-center max-w-lg w-full">
 
       <!-- Logo -->
       <div class="float-anim mb-6">
@@ -59,7 +59,7 @@
       <p class="pixel-font glow-pink mb-1" style="font-size: 0.55rem">INTERCAMBIO DE REGALOS</p>
       <p class="mb-8" style="font-size: 0.7rem; color: rgba(255,255,255,0.3)">2026 EDITION</p>
 
-      <!-- Panel high scores -->
+      <!-- Panel Regalos para todos -->
       <div class="arcade-panel p-6 mb-8">
         <p class="pixel-font glow-yellow mb-4" style="font-size: 0.5rem">◄ REGALOS PARA TODOS ►</p>
         <div class="space-y-2 text-left" style="font-size: 0.75rem; color: rgba(0,255,245,0.6)">
@@ -72,6 +72,38 @@
       <button class="arcade-btn flicker" onclick="goTo(1)">► COMENCEMOS</button>
       <p class="blink mt-4" style="font-size: 0.6rem; color: rgba(255,255,255,0.4)">PRESIONA START</p>
 
+    </section>
+
+    <!-- ========== Organizador ========== -->
+    <section id="step1" class="section active max-w-md w-full">
+      <div class="arcade-panel p-6">
+
+        <p class="pixel-font glow-cyan mb-1" style="font-size: 0.5rem">PASO 1 DE 6</p>
+        <h2 class="pixel-font glow-pink mb-6" style="font-size: 0.75rem">PLAYER 1 — IDENTIFICATE</h2>
+
+        <!-- Input nombre -->
+        <label class="block mb-2" style="font-size: 0.75rem; color: rgba(0,255,245,0.7)">
+          ▶ TU NOMBRE
+        </label>
+        <input id="inputOrganizador" 
+               type="text" 
+               class="arcade-input mb-4" 
+               placeholder="INGRESA TU NOMBRE...">
+
+        <!-- Checkbox incluirse -->
+        <label class="flex items-center gap-3 cursor-pointer mb-6">
+          <input type="checkbox" id="checkIncluir" class="arcade-check" checked>
+          <span style="font-size: 0.75rem; color: rgba(0,255,245,0.7)">
+            INCLUIRME EN EL SORTEO
+          </span>
+        </label>
+
+        <!-- Botón continuar -->
+        <div class="flex justify-end">
+          <button class="arcade-btn" onclick="saveStep1()">CONTINUAR ►</button>
+        </div>
+
+      </div>
     </section>
 
   </div>
