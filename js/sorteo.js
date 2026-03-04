@@ -1,23 +1,82 @@
 function startSlot() {
-  if (state.participantes.length < 2) {
-    alert("Necesitas al menos 2 jugadores 🎮");
+
+  const total = state.participantes.length;
+
+  // Validar mínimo 2 jugadores
+  if (total < 2) {
+    Swal.fire({
+      icon: 'info',
+      title: 'Faltan jugadores',
+      text: 'Necesitas al menos 2 jugadores ',
+      confirmButtonColor: '#facc15'
+    });
     return;
   }
 
+  // 🔥 Validar número par
+  if (total % 2 !== 0) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Número impar detectado ',
+      html: `
+        El intercambio necesita un número <b>PAR</b> de jugadores.<br><br>
+        Actualmente tienes <b>${total}</b> jugadores.
+      `,
+      confirmButtonColor: '#ff00c8'
+    });
+    return;
+  }
+
+  // Si todo está bien
   realizarSorteo();
 }
 
 function realizarSorteo() {
-  const jugadores = [...state.participantes];
-  const mezclados = [...jugadores].sort(() => Math.random() - 0.5);
 
+  const jugadores = [...state.participantes];
+  let intentos = 0;
+  let valido = false;
   let resultados = [];
 
-  for (let i = 0; i < jugadores.length; i++) {
-    resultados.push({
-      de: jugadores[i],
-      para: mezclados[i]
+  while (!valido && intentos < 100) {
+
+    const mezclados = [...jugadores].sort(() => Math.random() - 0.5);
+    valido = true;
+    resultados = [];
+
+    for (let i = 0; i < jugadores.length; i++) {
+
+      const de = jugadores[i];
+      const para = mezclados[i];
+
+      // No regalarse a sí mismo
+      if (de === para) {
+        valido = false;
+        break;
+      }
+
+      // Verificar exclusiones
+      const bloqueado = state.exclusiones.some(e => e.de === de && e.para === para);
+
+      if (bloqueado) {
+        valido = false;
+        break;
+      }
+
+      resultados.push({ de, para });
+    }
+
+    intentos++;
+  }
+
+  if (!valido) {
+    Swal.fire({
+      icon: 'error',
+      title: 'No se pudo generar el sorteo',
+      text: 'Revisa las exclusiones, pueden ser incompatibles.',
+      confirmButtonColor: '#ff00c8'
     });
+    return;
   }
 
   state.resultadoSorteo = resultados;
