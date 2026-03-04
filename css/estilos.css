@@ -381,3 +381,24 @@ body::after {
 @media (min-width: 1024px) {
   .arcade-panel { max-width: 600px; margin: 0 auto; }
 }
+
+
+
+
+/* --- Desactivar los botones que no ocupamos tipo de evento --- */
+
+.event-selected {
+  background: linear-gradient(45deg, #ff00c8, #00fff5);
+  color: #000 !important;
+  transform: scale(1.05);
+  box-shadow: 0 0 15px #ff00c8;
+}
+
+
+/* --- Desactivar los botones que no ocupamos presupuestog --- */
+.event-selected {
+  background: linear-gradient(45deg, #ff00c8, #00fff5);
+  color: #000 !important;
+  transform: scale(1.05);
+  box-shadow: 0 0 15px #ff00c8;
+}
