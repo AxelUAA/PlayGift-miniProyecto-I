@@ -2,34 +2,42 @@ function startSlot() {
 
   const total = state.participantes.length;
 
-  // Validar mínimo 2 jugadores
   if (total < 2) {
     Swal.fire({
-      icon: 'info',
-      title: 'Faltan jugadores',
-      text: 'Necesitas al menos 2 jugadores ',
-      confirmButtonColor: '#facc15'
-    });
-    return;
-  }
-
-  // 🔥 Validar número par
-  if (total % 2 !== 0) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Número impar detectado ',
-      html: `
-        El intercambio necesita un número <b>PAR</b> de jugadores.<br><br>
-        Actualmente tienes <b>${total}</b> jugadores.
-      `,
+      icon: 'warning',
+      title: 'Faltan jugadores 🎮',
+      text: 'Necesitas al menos 2 jugadores.',
       confirmButtonColor: '#ff00c8'
     });
     return;
   }
 
-  // Si todo está bien
-  realizarSorteo();
+  if (total % 2 !== 0) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Número impar 🚫',
+      text: 'El intercambio requiere número PAR de jugadores.',
+      confirmButtonColor: '#ff00c8'
+    });
+    return;
+  }
+
+  Swal.fire({
+    title: '🎰 Iniciando sorteo...',
+    text: 'La suerte está echada...',
+    icon: 'info',
+    timer: 1500,
+    showConfirmButton: false,
+    background: '#111',
+    color: '#00fff5'
+  }).then(() => {
+
+    document.getElementById("slotPanel").classList.remove("hidden");
+
+    realizarSorteo();
+  });
 }
+
 
 function realizarSorteo() {
 
@@ -85,16 +93,25 @@ function realizarSorteo() {
   mostrarResultados();
 }
 
+
 function mostrarResultados() {
+
   const container = document.getElementById("sorteoResults");
   container.innerHTML = "";
 
   state.resultadoSorteo.forEach(r => {
-    const div = document.createElement("div");
-    div.className = "arcade-panel p-2";
 
-    div.innerHTML = `${r.de} ➜ ${r.para}`;
+    const div = document.createElement("div");
+    div.className = "arcade-panel p-2 text-center";
+
+    div.innerHTML = `
+      <span style="color:#ff00c8">${r.de}</span>
+      →
+      <span style="color:#00fff5">${r.para}</span>
+    `;
 
     container.appendChild(div);
   });
+
+  document.getElementById("btnNuevoSorteo").classList.remove("hidden");
 }
