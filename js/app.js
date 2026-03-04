@@ -387,3 +387,58 @@ document.getElementById("inputPresupuesto")
     goTo(6);
   });
 }
+
+
+
+// mostrar datos 
+
+function showEventData() {
+
+  const panel = document.getElementById("eventDataPanel");
+  const content = document.getElementById("eventDataContent");
+
+  // Toggle mostrar / ocultar
+  panel.classList.toggle("hidden");
+
+  // Si se está ocultando, no renderizamos
+  if (panel.classList.contains("hidden")) return;
+
+  content.innerHTML = `
+    <div><strong>Organizador:</strong> ${state.organizador}</div>
+    <div><strong>Total jugadores:</strong> ${state.participantes.length}</div>
+    <div><strong>Evento:</strong> ${state.nombreCelebracion || state.tipoEvento}</div>
+    <div><strong>Fecha:</strong> ${state.fecha}</div>
+    <div><strong>Presupuesto:</strong> $${state.presupuesto}</div>
+    <div><strong>Exclusiones:</strong> ${state.exclusiones.length}</div>
+  `;
+}
+
+
+// Nuevo juego
+
+
+function resetAll() {
+
+  Swal.fire({
+    title: '¿Reiniciar juego?',
+    text: 'Se perderán todos los datos.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Sí, reiniciar',
+    cancelButtonText: 'Cancelar',
+    confirmButtonColor: '#ff00c8'
+  }).then((result) => {
+
+    if (result.isConfirmed) {
+
+      clearLS();
+      state = getInitialState();
+
+      goTo(0);
+      location.reload();
+    }
+  });
+}
+
+
+
