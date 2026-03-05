@@ -1,15 +1,17 @@
-// ===============================
+/// ===============================
 // Estado global
 // ===============================
 
 let state = loadFromLS() || getInitialState();
 let currentStep = 0;
 
+
 // ===============================
 // Navegación entre secciones
 // ===============================
 
 function goTo(step) {
+
   // Ocultar todas las secciones
   document.querySelectorAll(".section").forEach(sec => {
     sec.classList.remove("active");
@@ -23,45 +25,69 @@ function goTo(step) {
   }
 
   currentStep = step;
+
+  // Actualizar bolitas de progreso (ui.js)
+  updateStepIndicator(step);
+
+  // Renderizar contenido según el paso (ui.js)
+  if (step === 2) renderPlayers();
+  if (step === 3) renderExclusions();
+  if (step === 5) renderSuggestedDates();
 }
 
+
 // ===============================
-// PASO 1 – Guardar organizador
+// PASO 1 — Guardar organizador
 // ===============================
 
 function saveStep1() {
+
   const nombre = document.getElementById("inputOrganizador").value.trim();
   const incluir = document.getElementById("checkIncluir").checked;
 
   if (!nombre) {
     Swal.fire({
-  icon: 'warning',
-  title: 'Oops...',
-  text: 'Ingresa tu nombre jugador ',
-  confirmButtonColor: '#00fff5'
-});
+      icon: 'warning',
+      title: 'Oops...',
+      text: 'Ingresa tu nombre jugador',
+      confirmButtonColor: '#00fff5'
+    });
     return;
   }
 
   state.organizador = nombre;
   state.incluyeOrganizador = incluir;
 
-  if (incluir && !state.participantes.includes(nombre)) {
-    state.participantes.push(nombre);
+  // Evitar duplicar al organizador si se vuelve al paso 1
+  state.participantes = state.participantes.filter(p => p !== nombre);
+
+  if (incluir) {
+    state.participantes.unshift(nombre);
   }
 
   saveToLS(state);
   goTo(2);
 }
 
+
+// ===============================
+// PASO 2 — Jugadores
+// ===============================
+
 function addPlayer() {
-  const input = document.getElementById("inputJugador");
+
+  const input  = document.getElementById("inputJugador");
   const nombre = input.value.trim();
 
   if (!nombre) return;
 
   if (state.participantes.includes(nombre)) {
-    alert("Ese jugador ya existe 🚫");
+    Swal.fire({
+      icon: 'warning',
+      title: 'Duplicado 🚫',
+      text: 'Ese jugador ya existe',
+      confirmButtonColor: '#ff00c8'
+    });
     return;
   }
 
@@ -69,104 +95,25 @@ function addPlayer() {
   input.value = "";
 
   saveToLS(state);
-  renderPlayers();
-}
-
-function renderPlayers() {
-  const container = document.getElementById("playerList");
-  container.innerHTML = "";
-
-  state.participantes.forEach((p, index) => {
-    const div = document.createElement("div");
-
-    div.className =
-      "arcade-panel p-2 flex justify-between items-center cursor-move";
-    
-    div.draggable = true;
-    div.dataset.index = index;
-
-    div.innerHTML = `
-      <span>${p}</span>
-      <button onclick="removePlayer(${index})">❌</button>
-    `;
-
-    container.appendChild(div);
-  });
-
-  addDragEvents();
-}
-
-//logica de drag and drop 
-
-let draggedIndex = null;
-
-function addDragEvents() {
-  const items = document.querySelectorAll("#playerList > div");
-
-  items.forEach(item => {
-
-    item.addEventListener("dragstart", (e) => {
-      draggedIndex = Number(item.dataset.index);
-      item.classList.add("opacity-50");
-    });
-
-    item.addEventListener("dragend", () => {
-      item.classList.remove("opacity-50");
-    });
-
-    item.addEventListener("dragover", (e) => {
-      e.preventDefault();
-      item.classList.add("border-2", "border-yellow-400");
-    });
-
-    item.addEventListener("dragleave", () => {
-      item.classList.remove("border-2", "border-yellow-400");
-    });
-
-    item.addEventListener("drop", (e) => {
-      e.preventDefault();
-
-      const targetIndex = Number(item.dataset.index);
-
-      item.classList.remove("border-2", "border-yellow-400");
-
-      if (draggedIndex === targetIndex) return;
-
-      reorderPlayers(draggedIndex, targetIndex);
-    });
-
-  });
-}
-
-// Función para reordenar el array de jugadores en el estado
-
-function reorderPlayers(from, to) {
-  const movedPlayer = state.participantes.splice(from, 1)[0];
-  state.participantes.splice(to, 0, movedPlayer);
-
-  saveToLS(state);
-  renderPlayers();
+  renderPlayers(); // ui.js
 }
 
 function removePlayer(index) {
   state.participantes.splice(index, 1);
   saveToLS(state);
-  renderPlayers();
+  renderPlayers(); // ui.js
 }
 
 
-document.addEventListener("DOMContentLoaded", () => {
-  renderPlayers();
-});
-
-
-//exclusiones de jugadores
+// ===============================
+// PASO 3 — Exclusiones
+// ===============================
 
 let exclusionesActivas = false;
 
 function setExclusion(valor) {
-  exclusionesActivas = valor;
 
+  exclusionesActivas = valor;
   const lista = document.getElementById("exclusionList");
 
   if (!valor) {
@@ -177,47 +124,13 @@ function setExclusion(valor) {
   }
 
   lista.classList.remove("hidden");
-  renderExclusions();
+  renderExclusions(); // ui.js
 }
 
-
-// renderizado de exclusiones
-function renderExclusions() {
-  const container = document.getElementById("exclusionList");
-  container.innerHTML = "";
-
-  if (state.participantes.length < 2) {
-    container.innerHTML = "<p style='color:#ff00c8'>Agrega más jugadores primero</p>";
-    return;
-  }
-
-  state.participantes.forEach(de => {
-
-    const div = document.createElement("div");
-    div.className = "arcade-panel p-3 mb-2";
-
-    let opciones = state.participantes
-      .filter(p => p !== de)
-      .map(p => `<option value="${p}">${p}</option>`)
-      .join("");
-
-    div.innerHTML = `
-      <p style="font-size:0.7rem; margin-bottom:5px">${de} NO puede regalar a:</p>
-      <select onchange="addExclusion('${de}', this.value)" class="arcade-input">
-        <option value="">-- Selecciona --</option>
-        ${opciones}
-      </select>
-    `;
-
-    container.appendChild(div);
-  });
-}
-
-//agregar exclusión
 function addExclusion(de, para) {
+
   if (!para) return;
 
-  // Evitar duplicados
   const yaExiste = state.exclusiones.some(e => e.de === de && e.para === para);
 
   if (yaExiste) {
@@ -242,7 +155,9 @@ function addExclusion(de, para) {
 }
 
 
-// seleciona tipo de evento 
+// ===============================
+// PASO 4 — Tipo de evento
+// ===============================
 
 function selectEvent(button, tipo) {
 
@@ -251,9 +166,7 @@ function selectEvent(button, tipo) {
     btn.classList.remove("event-selected");
   });
 
-  // Marcar seleccionado
   button.classList.add("event-selected");
-
   state.tipoEvento = tipo;
 
   const customDiv = document.getElementById("customEventDiv");
@@ -269,18 +182,7 @@ function selectEvent(button, tipo) {
   saveToLS(state);
 }
 
-//guardar nombre de celebración personalizada
-
-document.getElementById("inputEventName")
-  .addEventListener("input", function () {
-    state.nombreCelebracion = this.value.trim();
-    saveToLS(state);
-  });
-
-
-  // validacion de seleccion 
-
-  function validateEventStep() {
+function validateEventStep() {
 
   if (!state.tipoEvento) {
     Swal.fire({
@@ -306,8 +208,9 @@ document.getElementById("inputEventName")
 }
 
 
-
-// selecciona presupuesto 
+// ===============================
+// PASO 5 — Fecha y Presupuesto
+// ===============================
 
 function selectBudget(button, amount) {
 
@@ -331,30 +234,7 @@ function selectBudget(button, amount) {
   saveToLS(state);
 }
 
-
-//guardar presupuesto personalizado
-
-document.getElementById("inputPresupuesto")
-  .addEventListener("input", function () {
-    const valor = Number(this.value);
-    state.presupuesto = valor;
-    saveToLS(state);
-  });
-
-
-  //guardar fecha
-
-
-  document.getElementById("inputFecha")
-  .addEventListener("change", function () {
-    state.fecha = this.value;
-    saveToLS(state);
-  });
-
-
-  //validacion de presupuesto
-
-  function saveAndFinish() {
+function saveAndFinish() {
 
   if (!state.fecha) {
     Swal.fire({
@@ -389,33 +269,9 @@ document.getElementById("inputPresupuesto")
 }
 
 
-
-// mostrar datos 
-
-function showEventData() {
-
-  const panel = document.getElementById("eventDataPanel");
-  const content = document.getElementById("eventDataContent");
-
-  // Toggle mostrar / ocultar
-  panel.classList.toggle("hidden");
-
-  // Si se está ocultando, no renderizamos
-  if (panel.classList.contains("hidden")) return;
-
-  content.innerHTML = `
-    <div><strong>Organizador:</strong> ${state.organizador}</div>
-    <div><strong>Total jugadores:</strong> ${state.participantes.length}</div>
-    <div><strong>Evento:</strong> ${state.nombreCelebracion || state.tipoEvento}</div>
-    <div><strong>Fecha:</strong> ${state.fecha}</div>
-    <div><strong>Presupuesto:</strong> $${state.presupuesto}</div>
-    <div><strong>Exclusiones:</strong> ${state.exclusiones.length}</div>
-  `;
-}
-
-
-// Nuevo juego
-
+// ===============================
+// PASO 6 — Nuevo juego
+// ===============================
 
 function resetAll() {
 
@@ -430,10 +286,8 @@ function resetAll() {
   }).then((result) => {
 
     if (result.isConfirmed) {
-
       clearLS();
       state = getInitialState();
-
       goTo(0);
       location.reload();
     }
@@ -441,4 +295,21 @@ function resetAll() {
 }
 
 
+// ===============================
+// Listeners de inputs
+// ===============================
 
+document.getElementById("inputEventName").addEventListener("input", function () {
+  state.nombreCelebracion = this.value.trim();
+  saveToLS(state);
+});
+
+document.getElementById("inputPresupuesto").addEventListener("input", function () {
+  state.presupuesto = Number(this.value);
+  saveToLS(state);
+});
+
+document.getElementById("inputFecha").addEventListener("change", function () {
+  state.fecha = this.value;
+  saveToLS(state);
+});

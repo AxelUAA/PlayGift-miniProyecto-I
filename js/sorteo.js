@@ -1,22 +1,21 @@
+// ===============================
+// sorteo.js — Lógica del sorteo
+// ===============================
+
+let sorteoIndex = 0; // controla cuántos resultados se han revelado
+
+
+// ── Iniciar sorteo ────────────────────────────────────────
+
 function startSlot() {
 
   const total = state.participantes.length;
 
-  if (total < 2) {
+  if (total < 3) {
     Swal.fire({
       icon: 'warning',
       title: 'Faltan jugadores 🎮',
-      text: 'Necesitas al menos 2 jugadores.',
-      confirmButtonColor: '#ff00c8'
-    });
-    return;
-  }
-
-  if (total % 2 !== 0) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Número impar 🚫',
-      text: 'El intercambio requiere número PAR de jugadores.',
+      text: 'Necesitas al menos 3 jugadores.',
       confirmButtonColor: '#ff00c8'
     });
     return;
@@ -33,11 +32,12 @@ function startSlot() {
   }).then(() => {
 
     document.getElementById("slotPanel").classList.remove("hidden");
-
     realizarSorteo();
   });
 }
 
+
+// ── Algoritmo del sorteo ──────────────────────────────────
 
 function realizarSorteo() {
 
@@ -54,22 +54,15 @@ function realizarSorteo() {
 
     for (let i = 0; i < jugadores.length; i++) {
 
-      const de = jugadores[i];
+      const de   = jugadores[i];
       const para = mezclados[i];
 
       // No regalarse a sí mismo
-      if (de === para) {
-        valido = false;
-        break;
-      }
+      if (de === para) { valido = false; break; }
 
       // Verificar exclusiones
       const bloqueado = state.exclusiones.some(e => e.de === de && e.para === para);
-
-      if (bloqueado) {
-        valido = false;
-        break;
-      }
+      if (bloqueado) { valido = false; break; }
 
       resultados.push({ de, para });
     }
@@ -90,28 +83,78 @@ function realizarSorteo() {
   state.resultadoSorteo = resultados;
   saveToLS(state);
 
-  mostrarResultados();
+  // Preparar slot machine para revelar uno a uno
+  sorteoIndex = 0;
+  document.getElementById("reel1text").textContent = "???";
+  document.getElementById("reel2text").textContent = "???";
+  document.getElementById("sorteoResults").innerHTML = "";
+  document.getElementById("btnNuevoSorteo").classList.add("hidden");
+  document.getElementById("btnSpin").disabled = false;
+  document.getElementById("btnSpin").textContent = "🎰 GIRAR RULETA";
 }
 
 
-function mostrarResultados() {
+// ── Revelar resultado de uno en uno ──────────────────────
 
-  const container = document.getElementById("sorteoResults");
-  container.innerHTML = "";
+function spinNext() {
 
-  state.resultadoSorteo.forEach(r => {
+  // Si ya se mostraron todos, no hacer nada
+  if (sorteoIndex >= state.resultadoSorteo.length) return;
 
+  const r = state.resultadoSorteo[sorteoIndex];
+
+  // Animación rápida en los rodillos
+  animarRodillos(r.de, r.para, () => {
+
+    // Agregar resultado a la lista
+    const container = document.getElementById("sorteoResults");
     const div = document.createElement("div");
     div.className = "arcade-panel p-2 text-center";
-
+    div.style.animation = "flickerIn 0.5s ease";
     div.innerHTML = `
-      <span style="color:#ff00c8">${r.de}</span>
-      →
-      <span style="color:#00fff5">${r.para}</span>
+      <span style="color:#ff00c8; font-family:'Press Start 2P', monospace; font-size:0.6rem">${r.de}</span>
+      <span style="color:rgba(255,255,255,0.4)"> → </span>
+      <span style="color:#00fff5; font-family:'Press Start 2P', monospace; font-size:0.6rem">${r.para}</span>
     `;
-
     container.appendChild(div);
-  });
 
-  document.getElementById("btnNuevoSorteo").classList.remove("hidden");
+    sorteoIndex++;
+
+    // Si ya terminaron todos
+    if (sorteoIndex >= state.resultadoSorteo.length) {
+      document.getElementById("btnSpin").disabled = true;
+      document.getElementById("btnSpin").textContent = "✓ SORTEO COMPLETO";
+      document.getElementById("btnNuevoSorteo").classList.remove("hidden");
+    }
+  });
+}
+
+
+// ── Animación de rodillos ─────────────────────────────────
+
+function animarRodillos(nombreFinal1, nombreFinal2, callback) {
+
+  const reel1 = document.getElementById("reel1text");
+  const reel2 = document.getElementById("reel2text");
+  const nombres = state.participantes;
+
+  let ticks = 0;
+  const totalTicks = 10; // cuántas veces parpadea antes de revelar
+
+  const intervalo = setInterval(() => {
+
+    // Mostrar nombres aleatorios mientras "gira"
+    reel1.textContent = nombres[Math.floor(Math.random() * nombres.length)];
+    reel2.textContent = nombres[Math.floor(Math.random() * nombres.length)];
+    ticks++;
+
+    if (ticks >= totalTicks) {
+      clearInterval(intervalo);
+      // Mostrar el resultado final
+      reel1.textContent = nombreFinal1;
+      reel2.textContent = nombreFinal2;
+      callback();
+    }
+
+  }, 80); // velocidad del giro en ms
 }
